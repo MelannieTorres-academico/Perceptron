@@ -16,7 +16,7 @@ class Main {
       double delta_w, acum, y_hat, y_difference;
       for (int i=0; i<(d+1); i++){
         weights[i]=(double)rand() / RAND_MAX;
-        cout<<weights[i]<<endl;
+        //cout<<weights[i]<<endl;
       }
 
       error = 1;
@@ -53,13 +53,12 @@ class Main {
                 for (int j=0; j<(d+1); j++){
                   acum += x_test_set[i][j] * weights[j];
                 }
+
                 y_hat = (acum >= 0) ? 1 : 0;
 
                 cout<< y_hat<<endl;
               }
-
           }
-
         }
 
 
@@ -90,36 +89,39 @@ class Main {
 
       x_test_set = (long double**) malloc (n_size*sizeof(long double*));
       for (int i = 0; i<n_size; i++) {
-        x_test_set[i] = (long double*) malloc ((d+2)*sizeof(long double));
+        x_test_set[i] = (long double*) malloc ((d+1)*sizeof(long double));
       }
-      cout << d <<endl;
-      cout << m_size <<endl;
-      cout << n_size <<endl;
+      //cout << d <<endl;
+      //cout << m_size <<endl;
+      //cout << n_size <<endl;
 
       for (int i = 0; i < m_size; i++) {
         for (int j = 0; j < d; j++) {
           getline(cin, aux, ',');
           x_training_set[i][j]=stod(aux);
-          cout.precision(16);
-          cout << x_training_set[i][j] << " ";
+          //cout.precision(16);
+          //cout << x_training_set[i][j] << " ";
         }
         x_training_set[i][d]=1.0; //bias
+        //cout << x_training_set[i][d] << " ";
+
         getline(cin, aux);
         y_training_set[i] = stod(aux);
-        cout << y_training_set[i] << endl;
+        //cout << y_training_set[i] << endl;
       }
 
       for (int i = 0; i < n_size; i++) {
         for (int j = 0; j < (d-1); j++) {
           getline(cin, aux, ',');
           x_test_set[i][j] = stod(aux);
-          cout.precision(16);
-          cout << x_test_set[i][j] <<  " ";
+          //cout.precision(16);
+          //cout << x_test_set[i][j] <<  " ";
         }
         getline(cin, aux);
-        x_test_set[i][d] = stod(aux);
-        x_test_set[i][d+1] = 1.0; //bias
-        cout << x_test_set[i][d] << endl;
+        x_test_set[i][d-1] = stod(aux);
+        x_test_set[i][d] = 1.0; //bias
+        //cout << x_test_set[i][d] << " ";
+        //cout << x_test_set[i][d+1] << endl;
       }
 
       ann_training(d, l_rate, x_training_set, y_training_set, x_test_set, m_size, n_size);
