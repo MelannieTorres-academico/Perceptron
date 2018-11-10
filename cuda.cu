@@ -1,11 +1,6 @@
-/*
-To run:
-  g++ sequential.cpp
-  ./a.out < ./input.txt
-*/
 #include <iostream>
 #include <random>
-#include "cppheader.h"
+#include "cheader.h"
 
 using namespace std;
 
@@ -14,7 +9,6 @@ using namespace std;
       int i, j;
       double ms = 0, acum, y_hat;
       t.start();
-      #pragma parallel for shared(x_test_set, y_test_set) private(i, acum, y_hat)
 
         for (i = 0; i < n_size; i++) {
           acum = 0;
