@@ -3,7 +3,6 @@ To run:
   clang++ -Xpreprocessor -fopenmp openmp.cpp -lomp
   ./a.out < ./input.txt
 */
-
 #include <iostream>
 #include <random>
 #include "cppheader.h"
@@ -12,11 +11,8 @@ To run:
 using namespace std;
 
     void test(int d, long double **x_test_set, long double *y_test_set, int n_size, double *weights){
-      Timer t;
       int i, j;
       double ms = 0, acum, y_hat;
-      t.start();
-      #pragma parallel for shared(x_test_set, y_test_set) private(i, j, acum, y_hat)
 
         for (i = 0; i < n_size; i++) {
           acum = 0;
@@ -26,10 +22,9 @@ using namespace std;
 
           y_hat = (acum >= 0) ? 1 : 0;
           y_test_set[i] = y_hat;
-          //cout<< y_test_set[i]<<endl;
+          cout<< y_test_set[i]<<endl;
         }
-        ms += t.stop();
-        cout << "avg time = " << (ms) << " ms" << endl;
+
     }
 
     void initialize_weights(double *weights, int d){
@@ -39,14 +34,18 @@ using namespace std;
     }
 
     int ann_training(int d, double l_rate, long double **x_training_set, long double *y_training_set, double* weights, int m_size, int n_size){
+      Timer t;
       int error, num_iterations;
       double delta_w, acum, y_hat, y_difference;
+      double ms = 0;
 
       initialize_weights(weights, d);
       error = 1;
       num_iterations = 0;
 
-      while (error > 0 and num_iterations < 1000){
+      t.start();
+
+      while (error > 0 and num_iterations < 100000){
         error = 0;
         num_iterations ++;
         for (int i = 0; i < (m_size); i++) {
@@ -67,6 +66,8 @@ using namespace std;
               }
             }
           }
+          ms += t.stop();
+          cout << "avg time = " << (ms) << " ms" << endl;
           return error;
         }
 
