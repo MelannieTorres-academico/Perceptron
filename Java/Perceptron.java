@@ -69,11 +69,11 @@ class Perceptron {
     // Dimension
     dim = input.nextInt();
     input.nextLine(); //clear buffer
-    weights = new double[dim];
+    weights = new double[dim+1];
 
     // Train set size
     m_size = input.nextInt();
-    x_train_set = new double[m_size][dim];
+    x_train_set = new double[m_size][dim+1];
     y_train_set = new double[m_size];
     input.nextLine(); //clear buffer
 
@@ -87,8 +87,9 @@ class Perceptron {
     for(int i=0; i<m_size; i++){
       line = input.nextLine();
       String[] aux_line = line.split(",");
-      for(int j=0; j<dim; j++){
-        x_train_set[i][j] = Double.parseDouble(aux_line[j]);
+      for(int j=0; j<dim+1; j++){
+        if(j == dim) x_train_set[i][j] = 1.0;
+        else x_train_set[i][j] = Double.parseDouble(aux_line[j]);
       }
       y_train_set[i] = Double.parseDouble(aux_line[dim]);
     }
@@ -105,13 +106,13 @@ class Perceptron {
 
     double random;
     // Fill weights
-    for(int i = 0; i < dim; i++) {
+    for(int i = 0; i < dim+1; i++) {
       random = 0 + r.nextDouble() * (1 - 0);
       weights[i] = random;
     }
   }
 
-  void train(double learning_rate, int limit) {
+ public void train(double learning_rate, int limit) {
     double[][] x_train_set = this.getXTrainSet();
     double[] y_train_set = this.getYTrainSet();
     double[] weights = this.getWeights();
@@ -123,23 +124,27 @@ class Perceptron {
     double acum, difference, delta_w;
     int y_hat;
 
+    this.printWeights();
+
     while(error > 0 && iterations < limit){
       error = 0;
       iterations++;
 
       for(int i = 0; i < m_size; i++){
         acum = 0;
-        for(int j = 0; j < dim; j++){
+        for(int j = 0; j < dim+1; j++){
           acum += x_train_set[i][j] * weights[j];
         }
         if(acum >= 0) y_hat = 1;
         else y_hat = 0;
 
         difference = y_train_set[i] - y_hat;
+        //System.out.println("Difference = "+ difference);
         if(difference != 0) error +=1;
 
-        for(int j = 0; j < dim; j++) {
+        for(int j = 0; j < dim + 1; j++) {
           delta_w = (y_train_set[i] - y_hat) * learning_rate * x_train_set[i][j];
+          //System.out.println("DeltaW = "+ delta_w);
           weights[j] += delta_w;
         }
       }
@@ -147,14 +152,29 @@ class Perceptron {
 
     if(error != 0) {
       System.out.println("No solution found");
+    } else {
+      this.printWeights();
+      this.test(weights);
     }
   }
 
-  void train() {
+  public void test(double[] weights) {
+    double[][] x_test_set = this.getXTestSet();
+    int n_size = this.getNSize();
+    int dim = this.getDim();
+    double acum;
 
-  }
+    for(int i = 0; i < n_size; i++){
+      acum = 0;
+      for(int j = 0; j < dim; j++) {
+        acum += x_test_set[i][j] * weights[j];
+      }
+      if(acum >= 0) System.out.println("1");
+      else System.out.println("0");
+    }
+   }
 
-  void printTrainSets() {
+  public void printTrainSets() {
     System.out.println("X Train Set: ");
     double[][] x_train_set = this.getXTrainSet();
     double[] y_train_set = this.getYTrainSet();
@@ -178,12 +198,10 @@ class Perceptron {
     for(int i = 0; i < m_size; i++){
         System.out.println(y_train_set[i] + " ");
     }
-
-
   }
 
 
-  void printTestSet () {
+  public void printTestSet () {
     double[][] x_test_set = this.getXTestSet();
 
     int dim = this.getDim();
@@ -201,7 +219,7 @@ class Perceptron {
     }
   }
 
-  void printWeights() {
+  public void printWeights() {
     double[] weights = this.getWeights();
     int dim = this.getDim();
 

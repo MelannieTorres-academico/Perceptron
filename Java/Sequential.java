@@ -14,9 +14,9 @@ class Sequential {
     perceptron.parse();
     //only for testing purposes
 
-    perceptron.printTrainSets();
-    perceptron.printTestSet();
-    perceptron.printWeights();
+    //perceptron.printTrainSets();
+    //perceptron.printTestSet();
+    //perceptron.printWeights();
 
     double learning_rate = 0.01;
     int limit = 1000;
